@@ -24,4 +24,9 @@ public class Tag {
         this.userID = userID;
     }
     
+    @Override
+    public String toString() {
+        return "Tag [sofifaID=" + sofifaID + ", tag=" + tag + ", userID=" + userID + "]";
+    }
+    
 }

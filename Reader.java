@@ -5,16 +5,13 @@ import java.util.List;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.ICsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
 public class Reader {
 
-    private static String csvFileName = "tags.csv";
-
-    public List<Tag> readTag() {
+    public List<Tag> readTags(String csvFileName) throws IOException {
 
         ArrayList<Tag> arrayList = new ArrayList<Tag>();
 
@@ -22,45 +19,65 @@ public class Reader {
         try {
             beanReader = new CsvBeanReader(new FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE);
 
-            // the header elements are used to map the values to the bean (names must match)
             final String[] header = beanReader.getHeader(true);
-            final CellProcessor[] processors = getProcessors();
+            final CellProcessor[] processors = new CellProcessor[] {
+                    new ParseInt(),
+                    new ParseInt(),
+                    new Optional(),
+            };
             final String[] columns = new String[] {
-                "userID",
-                "sofifaID",
-                "tag",
-        };
+                    "userID",
+                    "sofifaID",
+                    "tag",
+            };
 
             Tag tag;
             while ((tag = beanReader.read(Tag.class, columns, processors)) != null) {
-                //System.out.println(String.format("lineNo=%s, rowNo=%s, tag=%s", beanReader.getLineNumber(),
-                //        beanReader.getRowNumber(), tag));
                 arrayList.add(tag);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (beanReader != null) {
-                try {
-                    beanReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                beanReader.close();
             }
         }
 
         return arrayList;
     }
 
-    private CellProcessor[] getProcessors() {
-        final CellProcessor[] processors = new CellProcessor[] {
-                new ParseInt(),
-                new ParseInt(),
-                //new NotNull(), 
-                new Optional(),
-        };
+    public List<Player> readPlayers(String csvFileName) throws IOException {
 
-        return processors;
+        ArrayList<Player> arrayList = new ArrayList<Player>();
+
+        ICsvBeanReader beanReader = null;
+        try {
+            beanReader = new CsvBeanReader(new FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE);
+
+            final String[] header = beanReader.getHeader(true);
+            final CellProcessor[] processors = new CellProcessor[] {
+                    new ParseInt(),
+                    new Optional(),
+                    new Optional(),
+            };
+            final String[] columns = new String[] {
+                    "sofifaID",
+                    "name",
+                    "positions",
+            };
+
+            Player player;
+            while ((player = beanReader.read(Player.class, columns, processors)) != null) {
+                arrayList.add(player);
+                //System.out.println(player);
+            }
+
+        } finally {
+            if (beanReader != null) {
+                beanReader.close();
+            }
+        }
+
+        return arrayList;
     }
+
 }
