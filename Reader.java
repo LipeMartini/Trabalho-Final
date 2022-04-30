@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.ParseDouble;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.ICsvBeanReader;
@@ -69,6 +70,41 @@ public class Reader {
             while ((player = beanReader.read(Player.class, columns, processors)) != null) {
                 arrayList.add(player);
                 //System.out.println(player);
+            }
+
+        } finally {
+            if (beanReader != null) {
+                beanReader.close();
+            }
+        }
+
+        return arrayList;
+    }
+
+    public List<Rating> readRatings(String csvFileName) throws IOException {
+
+        ArrayList<Rating> arrayList = new ArrayList<Rating>();
+
+        ICsvBeanReader beanReader = null;
+        try {
+            beanReader = new CsvBeanReader(new FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE);
+
+            final String[] header = beanReader.getHeader(true);
+            final CellProcessor[] processors = new CellProcessor[] {
+                    new ParseInt(),
+                    new ParseInt(),
+                    new ParseDouble(),
+            };
+            final String[] columns = new String[] {
+                    "userID",
+                    "sofifaID",
+                    "rating",
+            };
+
+            Rating rating;
+            while ((rating = beanReader.read(Rating.class, columns, processors)) != null) {
+                arrayList.add(rating);
+                //System.out.println(rating);
             }
 
         } finally {
