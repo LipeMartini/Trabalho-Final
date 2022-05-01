@@ -13,15 +13,19 @@ public class Main {
         try {
             long time = System.currentTimeMillis();
             List<Tag> tags = reader.readTags("tags.csv");
-            List<Player> players = reader.readPlayers("players.csv");
-            List<Rating> ratings = reader.readRatings("minirating.csv");
             System.out.println("Loaded tags: " + tags.size());
+            List<Player> players = reader.readPlayers("players.csv");
             System.out.println("Loaded players: " + players.size());
+            List<Rating> ratings = reader.readRatings("minirating.csv");
             System.out.println("Loaded ratings: " + ratings.size());
-            //System.out.println("Tempo para buildar as listas " + (System.currentTimeMillis() - time));
+            List<RatingsCounter> ratingsCounter = reader.readRatingsCounter();
+            System.out.println("Loaded ratingCounters: " + ratingsCounter.size());
+            System.out.println("Tempo para buildar as listas " + (System.currentTimeMillis() - time));
+            for (RatingsCounter printRatingCounter : ratingsCounter) {
+                System.out.println(printRatingCounter);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
 }

@@ -1,5 +1,8 @@
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.supercsv.io.CsvBeanReader;
@@ -69,7 +72,7 @@ public class Reader {
             Player player;
             while ((player = beanReader.read(Player.class, columns, processors)) != null) {
                 arrayList.add(player);
-                //System.out.println(player);
+                // System.out.println(player);
             }
 
         } finally {
@@ -104,13 +107,62 @@ public class Reader {
             Rating rating;
             while ((rating = beanReader.read(Rating.class, columns, processors)) != null) {
                 arrayList.add(rating);
-                //System.out.println(rating);
+                // System.out.println(rating);
             }
 
         } finally {
             if (beanReader != null) {
                 beanReader.close();
             }
+        }
+
+        return arrayList;
+    }
+
+    public List<RatingsCounter> readRatingsCounter() throws IOException {
+
+        ArrayList<RatingsCounter> arrayList = new ArrayList<RatingsCounter>();
+
+        try (InputStream path = getClass().getClassLoader().getResourceAsStream("minirating.csv")) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(path))) {
+
+                // ignorando a primeira linha, que é o cabeçalho, e começando o laço "while" na
+                // próxima linha
+                String line = br.readLine();
+                line = br.readLine();
+
+                while (line != null) {
+                    String[] strSplit = line.split(",");
+
+                    Integer sofifaID = Integer.parseInt(strSplit[1]);
+                    Double globalRating = Double.parseDouble(strSplit[2]);
+                    Boolean found = false;
+
+                    // guardando as informações em suas respectivas variáveis dentro da classe
+                    for (RatingsCounter ratingsCounter : arrayList) {
+                        if (sofifaID == ratingsCounter.getSofifaID()) {
+                            ratingsCounter.setGlobalRating(ratingsCounter.getGlobalRating() + globalRating);
+                            ratingsCounter.setCounter(ratingsCounter.getCounter() + 1);
+                            found = true;
+                        }
+                    }
+                    if (found == false) {
+                        RatingsCounter novoCounter = new RatingsCounter(sofifaID, globalRating, 1);
+                        arrayList.add(novoCounter);
+                    }
+
+                    // lendo a próxima linha
+                    line = br.readLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        for (RatingsCounter ratingsCounter : arrayList) {
+            ratingsCounter.setGlobalRating(ratingsCounter.getGlobalRating()/ratingsCounter.getCounter());
         }
 
         return arrayList;
