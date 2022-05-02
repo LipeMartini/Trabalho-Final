@@ -3,15 +3,9 @@ import java.util.LinkedList;
 
 public class TabelaHashRating {
 
-    int key;
     ArrayList<LinkedList<Rating>> value;
+    int tam = 30;
 
-    public int getKey() {
-        return key;
-    }
-    public void setKey(int key) {
-        this.key = key;
-    }
     public ArrayList<LinkedList<Rating>> getValue() {
         return value;
     }
@@ -21,8 +15,8 @@ public class TabelaHashRating {
     
     public ArrayList<LinkedList<Rating>> addValue(int key, ArrayList<LinkedList<Rating>> list, Rating value) {
 
-        int hashIndex = (value.getUserID() % 20);
-        list.get(hashIndex).add(value);
+        int hashCode = (value.getUserID() % tam);
+        list.get(hashCode).add(value);
 
         return list;
     }
@@ -32,8 +26,8 @@ public class TabelaHashRating {
 
         ArrayList<Rating> value = new ArrayList<Rating>();
 
-        int hashIndex = (key % 20);
-        LinkedList<Rating> linkedList = list.get(hashIndex);
+        int hashCode = (key % tam);
+        LinkedList<Rating> linkedList = list.get(hashCode);
         for (Rating rating : linkedList) {
             if(rating.getUserID() == key) {
                 value.add(rating);

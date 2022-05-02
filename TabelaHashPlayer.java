@@ -3,15 +3,9 @@ import java.util.LinkedList;
 
 public class TabelaHashPlayer {
 
-    int key;
     ArrayList<LinkedList<Player>> value;
+    int tam = 30;
 
-    public int getKey() {
-        return key;
-    }
-    public void setKey(int key) {
-        this.key = key;
-    }
     public ArrayList<LinkedList<Player>> getValue() {
         return value;
     }
@@ -19,10 +13,10 @@ public class TabelaHashPlayer {
         this.value = value;
     }
     
-    public ArrayList<LinkedList<Player>> addPlayer(ArrayList<LinkedList<Player>> list, Player value) {
+    public ArrayList<LinkedList<Player>> addValue(ArrayList<LinkedList<Player>> list, Player value) {
 
-        int hashIndex = (value.getSofifaID() % 20);
-        list.get(hashIndex).add(value);
+        int hashCode = (value.getSofifaID() % tam);
+        list.get(hashCode).add(value);
 
         return list;
     }
@@ -31,8 +25,8 @@ public class TabelaHashPlayer {
 
         Player value = null;
 
-        int hashIndex = (key % 20);
-        LinkedList<Player> linkedList = list.get(hashIndex);
+        int hashCode = (key % tam);
+        LinkedList<Player> linkedList = list.get(hashCode);
         for (Player globalRating : linkedList) {
             if(globalRating.getSofifaID() == key) {
                 value = globalRating;

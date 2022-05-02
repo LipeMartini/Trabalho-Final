@@ -3,15 +3,9 @@ import java.util.LinkedList;
 
 public class TabelaHashGlobalRating {
 
-    int key;
     ArrayList<LinkedList<GlobalRating>> value;
+    int tam = 30;
 
-    public int getKey() {
-        return key;
-    }
-    public void setKey(int key) {
-        this.key = key;
-    }
     public ArrayList<LinkedList<GlobalRating>> getValue() {
         return value;
     }
@@ -21,8 +15,8 @@ public class TabelaHashGlobalRating {
     
     public ArrayList<LinkedList<GlobalRating>> addValue(ArrayList<LinkedList<GlobalRating>> list, GlobalRating value) {
 
-        int hashIndex = (value.getSofifaID() % 20);
-        list.get(hashIndex).add(value);
+        int hashCode = (value.getSofifaID() % tam);
+        list.get(hashCode).add(value);
 
         return list;
     }
@@ -31,8 +25,8 @@ public class TabelaHashGlobalRating {
 
         GlobalRating value = null;
 
-        int hashIndex = (key % 20);
-        LinkedList<GlobalRating> linkedList = list.get(hashIndex);
+        int hashCode = (key % tam);
+        LinkedList<GlobalRating> linkedList = list.get(hashCode);
         for (GlobalRating globalRating : linkedList) {
             if(globalRating.getSofifaID() == key) {
                 value = globalRating;
