@@ -119,15 +119,13 @@ public class Reader {
         return arrayList;
     }
 
-    public List<RatingsCounter> readRatingsCounter() throws IOException {
+    public List<GlobalRating> readGlobalRating() throws IOException {
 
-        ArrayList<RatingsCounter> arrayList = new ArrayList<RatingsCounter>();
+        ArrayList<GlobalRating> arrayList = new ArrayList<GlobalRating>();
 
         try (InputStream path = getClass().getClassLoader().getResourceAsStream("minirating.csv")) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(path))) {
 
-                // ignorando a primeira linha, que é o cabeçalho, e começando o laço "while" na
-                // próxima linha
                 String line = br.readLine();
                 line = br.readLine();
 
@@ -138,8 +136,7 @@ public class Reader {
                     Double globalRating = Double.parseDouble(strSplit[2]);
                     Boolean found = false;
 
-                    // guardando as informações em suas respectivas variáveis dentro da classe
-                    for (RatingsCounter ratingsCounter : arrayList) {
+                    for (GlobalRating ratingsCounter : arrayList) {
                         if (sofifaID == ratingsCounter.getSofifaID()) {
                             ratingsCounter.setGlobalRating(ratingsCounter.getGlobalRating() + globalRating);
                             ratingsCounter.setCounter(ratingsCounter.getCounter() + 1);
@@ -147,7 +144,7 @@ public class Reader {
                         }
                     }
                     if (found == false) {
-                        RatingsCounter novoCounter = new RatingsCounter(sofifaID, globalRating, 1);
+                        GlobalRating novoCounter = new GlobalRating(sofifaID, globalRating, 1);
                         arrayList.add(novoCounter);
                     }
 
@@ -161,7 +158,7 @@ public class Reader {
             e.printStackTrace();
         }
 
-        for (RatingsCounter ratingsCounter : arrayList) {
+        for (GlobalRating ratingsCounter : arrayList) {
             ratingsCounter.setGlobalRating(ratingsCounter.getGlobalRating()/ratingsCounter.getCounter());
         }
 

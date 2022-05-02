@@ -1,10 +1,10 @@
-public class RatingsCounter {
+public class GlobalRating {
 
-    private int sofifaID;
+    public int sofifaID;
     public Double globalRating;
     public int counter;
     
-    public RatingsCounter(int sofifaID, double globalRating, int counter) {
+    public GlobalRating(int sofifaID, double globalRating, int counter) {
         this.sofifaID = sofifaID;
         this.globalRating = globalRating;
         this.counter = counter;
@@ -29,7 +29,7 @@ public class RatingsCounter {
     }
     @Override
     public String toString() {
-        return "RatingsCounter [sofifaID=" + sofifaID + ", globalRating=" + globalRating + ", counter=" + counter + "]";
+        return "GlobalRating [sofifaID=" + sofifaID + ", globalRating=" + globalRating + ", counter=" + counter + "]";
     }
 
 }

@@ -12,20 +12,23 @@ public class Main {
         // pré-processamento e construção das listas
         try {
             long time = System.currentTimeMillis();
+
             List<Tag> tags = reader.readTags("tags.csv");
             System.out.println("Loaded tags: " + tags.size());
             List<Player> players = reader.readPlayers("players.csv");
             System.out.println("Loaded players: " + players.size());
             List<Rating> ratings = reader.readRatings("minirating.csv");
             System.out.println("Loaded ratings: " + ratings.size());
-            List<RatingsCounter> ratingsCounter = reader.readRatingsCounter();
+            List<GlobalRating> ratingsCounter = reader.readGlobalRating();
             System.out.println("Loaded ratingCounters: " + ratingsCounter.size());
-            System.out.println("Tempo para buildar as listas " + (System.currentTimeMillis() - time));
-            for (RatingsCounter printRatingCounter : ratingsCounter) {
-                System.out.println(printRatingCounter);
-            }
+
+            
+
+            System.out.println("Tempo para construir todas as estruturas = " + (System.currentTimeMillis() - time));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // inicia-se o terminal e as pesquisas pelo usuário
+
     }
 }
