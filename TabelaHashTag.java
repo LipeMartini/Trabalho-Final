@@ -2,45 +2,50 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class TabelaHashTag {
-    
-    int key;
-    ArrayList<LinkedList<Tag>> value;
 
-    public int getKey() {
-        return key;
+    ArrayList<LinkedList<Tag>> value;
+    int tam = 73;
+
+    public int getTam() {
+        return tam;
     }
-    public void setKey(int key) {
-        this.key = key;
+
+    public void setTam(int tam) {
+        this.tam = tam;
     }
+
     public ArrayList<LinkedList<Tag>> getValue() {
         return value;
     }
+
     public void setValue(ArrayList<LinkedList<Tag>> value) {
         this.value = value;
     }
-    
-    public ArrayList<LinkedList<Tag>> addValue(ArrayList<LinkedList<Tag>> list, Tag value) {
 
-        int hashIndex = (Integer.parseInt(value.getTag()) % 20);
-        list.get(hashIndex).add(value);
+    public TabelaHashTag iniciaTagTable(TabelaHashTag table) {
 
-        return list;
-    }
-
-    // Dada uma Tag como entrada em forma de String, retorna uma lista do tipo "Tag" com todas as tags referentes à String de entrada
-    public ArrayList<Tag> findValue(String key, ArrayList<LinkedList<Tag>> list) {
-
-        ArrayList<Tag> value = new ArrayList<Tag>();
-
-        int hashIndex = (Integer.parseInt(key) % 20);
-        LinkedList<Tag> linkedList = list.get(hashIndex);
-        for (Tag tag : linkedList) {
-            if(tag.getTag() == key) {
-                value.add(tag);
-            }
+        table.value = new ArrayList<LinkedList<Tag>>();
+        for (int i = 0; i < tam; i++) {
+            LinkedList<Tag> list = new LinkedList<Tag>();
+            table.value.add(list);
         }
 
-        return value;
+        return table;
     }
-    
+
+    public TabelaHashTag addValue(Tag value, TabelaHashTag table) {
+
+        if (value.getTag() != null) {
+            int hashCode = 0;
+            char[] tag = value.getTag().toCharArray();
+            for (int i = 0; i < tag.length; i++) {
+                hashCode += (int) tag[i];
+            }
+            hashCode = (hashCode % tam);
+            table.getValue().get(hashCode).add(value);
+            //System.out.println(value);
+        }
+        return table;
+    }
+
 }
