@@ -76,7 +76,9 @@ public class Main {
         System.out.println("$ tags <list of tags>     para pesquisar jogadores que tenham determinadas tags");
         System.out.println("$ end                     para terminar as pesquisas");
 
-        search.terminal(playersTable, ratingsTable, tagsTable, playersList);
+        Scanner sc = new Scanner(System.in);
+        search.terminal(playersTable, ratingsTable, tagsTable, playersList, sc);
+        sc.close();
 
         // search.pesquisaTag("tags 'English Premier League' 'Brazil'", tagsTable,
         // playersTable);
