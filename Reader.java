@@ -71,6 +71,8 @@ public class Reader {
 
             Player player;
             while ((player = beanReader.read(Player.class, columns, processors)) != null) {
+                player.setGlobalRating(0.0);
+                player.setCounter(0);
                 arrayList.add(player);
                 // System.out.println(player);
             }
@@ -114,52 +116,6 @@ public class Reader {
             if (beanReader != null) {
                 beanReader.close();
             }
-        }
-
-        return arrayList;
-    }
-
-    public List<GlobalRating> readGlobalRating() throws IOException {
-
-        ArrayList<GlobalRating> arrayList = new ArrayList<GlobalRating>();
-
-        try (InputStream path = getClass().getClassLoader().getResourceAsStream("minirating.csv")) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(path))) {
-
-                String line = br.readLine();
-                line = br.readLine();
-
-                while (line != null) {
-                    String[] strSplit = line.split(",");
-
-                    Integer sofifaID = Integer.parseInt(strSplit[1]);
-                    Double globalRating = Double.parseDouble(strSplit[2]);
-                    Boolean found = false;
-
-                    for (GlobalRating ratingsCounter : arrayList) {
-                        if (sofifaID == ratingsCounter.getSofifaID()) {
-                            ratingsCounter.setGlobalRating(ratingsCounter.getGlobalRating() + globalRating);
-                            ratingsCounter.setCounter(ratingsCounter.getCounter() + 1);
-                            found = true;
-                        }
-                    }
-                    if (found == false) {
-                        GlobalRating novoCounter = new GlobalRating(sofifaID, globalRating, 1);
-                        arrayList.add(novoCounter);
-                    }
-
-                    // lendo a próxima linha
-                    line = br.readLine();
-                }
-            } catch (IOException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        for (GlobalRating ratingsCounter : arrayList) {
-            ratingsCounter.setGlobalRating(ratingsCounter.getGlobalRating()/ratingsCounter.getCounter());
         }
 
         return arrayList;
