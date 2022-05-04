@@ -123,6 +123,7 @@ public class Pesquisa {
 
         for (String parte : key) {
 
+            hashCode = 0;
             char[] tagCA = parte.toCharArray();
             for (int i = 0; i < tagCA.length; i++) {
                 hashCode += (int) tagCA[i];
@@ -139,7 +140,7 @@ public class Pesquisa {
         }
         List<Integer> result = new ArrayList<Integer>();
         result = value.stream()
-                .filter(e -> Collections.frequency(value, e) <= nroKeys)
+                .filter(e -> Collections.frequency(value, e) >= nroKeys)
                 .distinct()
                 .collect(Collectors.toList());
         // System.out.println("lista não filtrada tamanho: " + value.size());
