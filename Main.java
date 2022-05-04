@@ -15,7 +15,7 @@ public class Main {
         // System.out.println("Loaded tags: " + tagsList.size());
         List<Player> playersList = reader.readPlayers("players.csv");
         // System.out.println("Loaded players: " + playersList.size());
-        List<Rating> ratingsList = reader.readRatings("minirating.csv");
+        List<Rating> ratingsList = reader.readRatings("rating.csv");
         // System.out.println("Loaded ratings: " + ratingsList.size());
 
         // construção das tabelas hash
@@ -38,36 +38,13 @@ public class Main {
         }
 
         search.processaGlobalRatings(ratingsList, playersTable);
-
-        // construindo a árvore Trie
-        // Trie trie = new Trie();
-        // trie.addWord("Java");
-        // trie.addWord("JavaOne");
-        // trie.addWord("JavaTwo");
-        // trie.addWord("JavaThree");
-        // trie.addWord("JavaFour");
-        // trie.addWord("JavaFive");
-        // for (Player player : playersList) {
-        // trie.addWord(player.getName());
-        // }
+        for (Player player : playersList) {
+            player.setGlobalRating(player.getGlobalRating() / player.getCounter());
+        }
 
         System.out.println("Tempo para construir todas as estruturas = " + (System.currentTimeMillis() - time));
 
         // inicia-se o terminal e as pesquisas pelo usuário
-
-        // testando a trie
-        // List<String> matches = trie.search("ava");
-        // if(matches==null || matches.size() == 0)
-        // {
-        // System.out.println("No match found");
-        // }
-        // else
-        // {
-        // for(String str:matches)
-        // {
-        // System.out.println(str);
-        // }
-        // }
 
         System.out.println("Pesquise da seguinte forma:");
         System.out.println("$ player <name or prefix> para pesquisar jogadores pelo nome");

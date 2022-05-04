@@ -4,7 +4,7 @@ import java.util.LinkedList;
 public class TabelaHashTag {
 
     ArrayList<LinkedList<Tag>> value;
-    int tam = 73;
+    int tam = 24000;
 
     public int getTam() {
         return tam;

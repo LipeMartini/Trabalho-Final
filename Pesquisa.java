@@ -1,4 +1,3 @@
-import java.text.NumberFormat.Style;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,19 +14,19 @@ public class Pesquisa {
         Pesquisa search = new Pesquisa();
         System.out.print("\n$ ");
         String str = sc.nextLine();
-        if (str.equals("end")) endFlag = true;
+        if (str.equals("end"))
+            endFlag = true;
         if (!endFlag) {
             String[] strSplit = str.split(" ", 2);
             String pesquisa = strSplit[0];
             String key = strSplit[1];
-            
+
             if (pesquisa.contains("top")) {
                 // retirar N da String pesquisa
-                String numberOnly = pesquisa. replaceAll("[^0-9]", "");
+                String numberOnly = pesquisa.replaceAll("[^0-9]", "");
                 int n = Integer.parseInt(numberOnly);
                 search.pesquisaTopPos(n, key, playersList);
-            } else
-            {
+            } else {
                 switch (pesquisa) {
                     case "player":
                         search.pesquisaNome(key, playersList);
@@ -39,6 +38,10 @@ public class Pesquisa {
                     case "tags":
                         search.pesquisaTag(key, tagsTable, playersTable);
                         break;
+                    case "end":
+                        break;
+                    default:
+                        System.out.println("Pesquisa inválida");
                 }
             }
             search.terminal(playersTable, ratingsTable, tagsTable, playersList, sc);
@@ -48,22 +51,21 @@ public class Pesquisa {
 
     public void processaGlobalRatings(List<Rating> list, TabelaHashPlayer table) {
 
-        ArrayList<Player> arrayList = new ArrayList<Player>();
         Pesquisa search = new Pesquisa();
 
-        int sofifaID;
-        Double ratingAtual;
+        // int sofifaID;
+        // Double ratingAtual;
 
         for (Rating rating : list) {
-            sofifaID = rating.getSofifaID();
-            ratingAtual = rating.getRating();
+            // sofifaID = rating.getSofifaID();
+            // ratingAtual = rating.getRating();
 
-            for (Player globalRating : arrayList) {
-                if (sofifaID == globalRating.getSofifaID()) {
-                    globalRating.setGlobalRating(globalRating.getGlobalRating() + ratingAtual);
-                    globalRating.setCounter(globalRating.getCounter() + 1);
-                }
-            }
+            // for (Player player : arrayList) {
+            // if (sofifaID == player.getSofifaID()) {
+            // player.setGlobalRating(player.getGlobalRating() + ratingAtual);
+            // player.setCounter(player.getCounter() + 1);
+            // }
+            // }
 
             Player player = search.findPlayer(rating.getSofifaID(), table);
             player.setGlobalRating(player.getGlobalRating() + rating.getRating());
@@ -71,9 +73,6 @@ public class Pesquisa {
 
         }
 
-        for (Player globalRating : arrayList) {
-            globalRating.setGlobalRating(globalRating.getGlobalRating() / globalRating.getCounter());
-        }
     }
 
     public Player findPlayer(int key, TabelaHashPlayer table) {
@@ -138,7 +137,6 @@ public class Pesquisa {
                 if (tag.getTag().equals(parte)) {
                     // if(tag.getSofifaID() != idAtual)
                     value.add(tag.getSofifaID());
-                    System.out.println(tag);
                 }
                 // idAtual = tag.getSofifaID();
             }
@@ -148,11 +146,11 @@ public class Pesquisa {
                 .filter(e -> Collections.frequency(value, e) >= nroKeys)
                 .distinct()
                 .collect(Collectors.toList());
-        System.out.println(value.size());
-        System.out.println(result.size());
-        System.out.println("Nro de keys" + nroKeys / 5);
+        // System.out.println(value.size());
+        // System.out.println(result.size());
+        // System.out.println("Nro de keys" + nroKeys / 5);
 
-        System.out.println(key);
+        // System.out.println(key);
 
         // char[] tagCA = key.toCharArray();
         // for (int i = 0; i < tagCA.length; i++) {
@@ -191,7 +189,9 @@ public class Pesquisa {
 
         for (Integer id : list) {
             Player player = search.findPlayer(id, playerTable);
-            System.out.println(player);
+            System.out.printf("sofifa_id = %6d, name = %40s, positions = %12s, rating = %1.6f, counter = %6d \n",
+                    player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
+                    player.getCounter());
         }
 
         // list = search.findTag(s, tagTable);
@@ -216,11 +216,8 @@ public class Pesquisa {
         int i = 0;
         for (Rating rating : list) {
             Player player = search.findPlayer(rating.getSofifaID(), playersTable);
-            System.out.print("\nsofifa_id = " + player.getSofifaID());
-            System.out.print(", name = " + player.getName());
-            System.out.print(", global_rating = " + player.getGlobalRating());
-            System.out.print(", counter = " + player.getCounter());
-            System.out.print(", rating = " + rating.getRating());
+            System.out.printf("sofifa_id = %6d, name = %40s, rating = %1.6f, counter = %6d, rating = %1.1f \n",
+                    player.getSofifaID(), player.getName(), player.getGlobalRating(), player.getCounter(), rating.getRating());
             i++;
             if (i == 20)
                 break;
@@ -239,13 +236,15 @@ public class Pesquisa {
             }
         }
         for (Player player : list) {
-            System.out.println(player);
+            System.out.printf("sofifa_id = %6d, name = %40s, positions = %12s, rating = %1.6f, counter = %6d \n",
+                    player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
+                    player.getCounter());
         }
     }
 
     public void pesquisaTopPos(int n, String pos, List<Player> playersList) {
 
-        List<Player> list = new ArrayList<Player>();
+        ArrayList<Player> list = new ArrayList<Player>();
         System.out.println();
         Scanner sc = new Scanner(pos);
         for (String s; (s = sc.findWithinHorizon("(?<=\\').*?(?=\\')", 0)) != null;) {
@@ -255,13 +254,35 @@ public class Pesquisa {
 
         for (Player player : playersList) {
             if (player.getPositions().contains(pos)) {
-                list.add(player);
+                if (player.getCounter() >= 1000) {
+                    list.add(player);
+                }
             }
         }
         // aplicar algum sort na lista pela global rating
+        int bigger;
+        Player temp;
+        for (int i = 0; i < list.size(); i++) {
+            bigger = i;
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(j).getGlobalRating() > list.get(bigger).getGlobalRating()) // find the index of the minimum
+                                                                                        // element
+                {
+                    bigger = j;
+                }
+            }
+
+            temp = list.get(bigger); // swap the current element with the minimum element
+            list.set(bigger, list.get(i));
+            list.set(i, temp);
+        }
+        //
         int i = 0;
         for (Player player : list) {
-            System.out.println(player);
+            // System.out.printf(player + "\n", player.getGlobalRating());
+            System.out.printf("sofifa_id = %6d, name = %40s, positions = %12s, rating = %1.6f, counter = %6d \n",
+                    player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
+                    player.getCounter());
             i++;
             if (i == n)
                 break;
