@@ -75,6 +75,7 @@ public class Pesquisa {
 
     }
 
+    // Dado um sofifaID como chave, retorna o "Player" referente àquele sofifaID
     public Player findPlayer(int key, TabelaHashPlayer table) {
 
         Player value = null;
@@ -91,8 +92,7 @@ public class Pesquisa {
         return value;
     }
 
-    // Dado um userID como chave, retorna uma lista com todas as avaliações (do tipo
-    // "Rating") feitas por aquele usuáruio
+    // Dado um userID como chave, retorna uma lista com todas as avaliações (do tipo "Rating") feitas por aquele usuáruio
     public ArrayList<Rating> findRating(int key, TabelaHashRating table) {
 
         ArrayList<Rating> value = new ArrayList<Rating>();
@@ -110,8 +110,7 @@ public class Pesquisa {
         return value;
     }
 
-    // Dada uma Tag como entrada em forma de String, retorna uma lista do tipo "Tag"
-    // com todas as tags referentes à String de entrada
+    // Dada uma lista de Tags em forma de Strings como entrada, retorna uma lista com os sofifaID referentes aos jogadores que possuem essas Tags
     public List<Integer> findTag(ArrayList<String> key, TabelaHashTag table) {
 
         System.out.println(key);
@@ -131,40 +130,23 @@ public class Pesquisa {
             hashCode = (hashCode % tam);
 
             LinkedList<Tag> linkedList = table.getValue().get(hashCode);
-            // int idAtual = linkedList.get(0).getSofifaID();
 
             for (Tag tag : linkedList) {
                 if (tag.getTag().equals(parte)) {
-                    // if(tag.getSofifaID() != idAtual)
                     value.add(tag.getSofifaID());
                 }
-                // idAtual = tag.getSofifaID();
             }
         }
         List<Integer> result = new ArrayList<Integer>();
         result = value.stream()
-                .filter(e -> Collections.frequency(value, e) >= nroKeys)
+                .filter(e -> Collections.frequency(value, e) <= nroKeys)
                 .distinct()
                 .collect(Collectors.toList());
-        // System.out.println(value.size());
-        // System.out.println(result.size());
-        // System.out.println("Nro de keys" + nroKeys / 5);
+        // System.out.println("lista não filtrada tamanho: " + value.size());
+        // System.out.println("lista filtrada tamanho: " + result.size());
+        // System.out.println("Número de keys: " + nroKeys / 5);
 
         // System.out.println(key);
-
-        // char[] tagCA = key.toCharArray();
-        // for (int i = 0; i < tagCA.length; i++) {
-        // hashCode += (int) tagCA[i];
-        // }
-        // hashCode = (hashCode % tam);
-
-        // LinkedList<Tag> linkedList = table.getValue().get(hashCode);
-        // for (Tag tag : linkedList) {
-        // if (tag.getTag().equals(key)) {
-        // value.add(tag);
-        // // System.out.println(tag);
-        // }
-        // }
 
         return result;
     }
@@ -189,7 +171,7 @@ public class Pesquisa {
 
         for (Integer id : list) {
             Player player = search.findPlayer(id, playerTable);
-            System.out.printf("sofifa_id = %6d, name = %40s, positions = %12s, rating = %1.6f, counter = %6d \n",
+            System.out.printf("sofifa_id = %6d, name = %45s, positions = %12s, rating = %1.6f, counter = %6d \n",
                     player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
                     player.getCounter());
         }
@@ -216,7 +198,7 @@ public class Pesquisa {
         int i = 0;
         for (Rating rating : list) {
             Player player = search.findPlayer(rating.getSofifaID(), playersTable);
-            System.out.printf("sofifa_id = %6d, name = %40s, rating = %1.6f, counter = %6d, rating = %1.1f \n",
+            System.out.printf("sofifa_id = %6d, name = %45s, rating = %1.6f, counter = %6d, rating = %1.1f \n",
                     player.getSofifaID(), player.getName(), player.getGlobalRating(), player.getCounter(), rating.getRating());
             i++;
             if (i == 20)
@@ -236,7 +218,7 @@ public class Pesquisa {
             }
         }
         for (Player player : list) {
-            System.out.printf("sofifa_id = %6d, name = %40s, positions = %12s, rating = %1.6f, counter = %6d \n",
+            System.out.printf("sofifa_id = %6d, name = %45s, positions = %12s, rating = %1.6f, counter = %6d \n",
                     player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
                     player.getCounter());
         }
@@ -280,7 +262,7 @@ public class Pesquisa {
         int i = 0;
         for (Player player : list) {
             // System.out.printf(player + "\n", player.getGlobalRating());
-            System.out.printf("sofifa_id = %6d, name = %40s, positions = %12s, rating = %1.6f, counter = %6d \n",
+            System.out.printf("sofifa_id = %6d, name = %45s, positions = %12s, rating = %1.6f, counter = %6d \n",
                     player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
                     player.getCounter());
             i++;
