@@ -4,7 +4,7 @@ import java.util.LinkedList;
 public class TabelaHashPlayer {
 
     ArrayList<LinkedList<Player>> value;
-    int tam = 30;
+    int tam = 180;
 
     public int getTam() {
         return tam;
@@ -19,6 +19,7 @@ public class TabelaHashPlayer {
         this.value = value;
     }
 
+    // inicia uma hash table de players vazia
     public TabelaHashPlayer iniciaPlayerTable(TabelaHashPlayer table) {
 
         table.value = new ArrayList<LinkedList<Player>>();
@@ -26,15 +27,14 @@ public class TabelaHashPlayer {
             LinkedList<Player> list = new LinkedList<Player>();
             table.value.add(list);
         }
-
         return table;
     }
     
+    // recebe um "Player", adiciona na hash table e retorna a table com o elemento incluído
     public TabelaHashPlayer addValue(TabelaHashPlayer list, Player value) {
 
         int hashCode = (value.getSofifaID() % tam);
         list.getValue().get(hashCode).add(value);
-
         return list;
     }
 

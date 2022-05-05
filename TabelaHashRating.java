@@ -4,7 +4,7 @@ import java.util.LinkedList;
 public class TabelaHashRating {
 
     ArrayList<LinkedList<Rating>> value;
-    int tam = 30;
+    int tam = 240000;
 
     public int getTam() {
         return tam;
@@ -19,6 +19,7 @@ public class TabelaHashRating {
         this.value = value;
     }
 
+    // inicia uma hash table de ratings vazia
     public TabelaHashRating iniciaRatingTable(TabelaHashRating table) {
 
         table.value = new ArrayList<LinkedList<Rating>>();
@@ -26,15 +27,14 @@ public class TabelaHashRating {
             LinkedList<Rating> list = new LinkedList<Rating>();
             table.value.add(list);
         }
-
         return table;
     }
     
+    // recebe um "Rating", adiciona na hash table e retorna a table com o elemento incluído
     public TabelaHashRating addValue(TabelaHashRating list, Rating value) {
 
         int hashCode = (value.getUserID() % tam);
         list.getValue().get(hashCode).add(value);
-
         return list;
     }
 

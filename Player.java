@@ -1,10 +1,10 @@
 public class Player {
 
-    private int sofifaID;
-    private String name;
-    private String positions;
-    public Double globalRating;
-    public int counter;
+    private int sofifaID; // ID referente ao jogador
+    private String name; // nome do jogador
+    private String positions; // posições (até 3) em que o jogador joga
+    public Double globalRating; // média de todas as avaliações feitas por usuários sobre este jogador
+    public int counter; // contagem de quantas avaliações foram feitas sobre este jogador
     
     public Double getGlobalRating() {
         return globalRating;

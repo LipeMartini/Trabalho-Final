@@ -1,8 +1,8 @@
 public class Tag {
     
-    private int userID;
-    private int sofifaID;
-    private String tag;
+    private int userID; // ID do usuário que deu a Tag
+    private int sofifaID; // ID do jogador que tem a Tag
+    private String tag; // Tag referente a uma característica do jogador
 
     
     public int getUserID() {

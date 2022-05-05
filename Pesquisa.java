@@ -7,22 +7,23 @@ import java.util.stream.Collectors;
 
 public class Pesquisa {
 
+    // terminal que recebe uma entrada do usuário, decide qual pesquisa deve ser feita, e chama a pesquisa
     public void terminal(TabelaHashPlayer playersTable, TabelaHashRating ratingsTable, TabelaHashTag tagsTable,
             List<Player> playersList, Scanner sc) {
 
-        boolean endFlag = false;
+        boolean endFlag = false; // flag usada para decidir se o terminal deve ser chamado recursivamente ou não
         Pesquisa search = new Pesquisa();
         System.out.print("\n$ ");
-        String str = sc.nextLine();
+        String str = sc.nextLine(); // lê a entrada do usuária, que vai indicar o quê deve ser pesquisado a seguir
         if (str.equals("end"))
-            endFlag = true;
+            endFlag = true; // sinaliza que o terminal não deve ser chamado recursivamente, terminando assim o programa
         if (!endFlag) {
-            String[] strSplit = str.split(" ", 2);
-            String pesquisa = strSplit[0];
-            String key = strSplit[1];
+            String[] strSplit = str.split(" ", 2); // separa a primeira palavra digitada pelo usuário
+            String pesquisa = strSplit[0]; // determina qual tipo de pesquisa deve ser feita
+            String key = strSplit[1]; // informação relativa à pesquisa, que deve ser passada como parâmetro
 
             if (pesquisa.contains("top")) {
-                // retirar N da String pesquisa
+                // separa o número de jogadores a serem pesquisados para ser passado como parâmetro
                 String numberOnly = pesquisa.replaceAll("[^0-9]", "");
                 int n = Integer.parseInt(numberOnly);
                 search.pesquisaTopPos(n, key, playersList);
@@ -44,35 +45,21 @@ public class Pesquisa {
                         System.out.println("Pesquisa inválida");
                 }
             }
+            // chama recursivamente o terminal, a não ser que o usuário tenha digitado "end"
             search.terminal(playersTable, ratingsTable, tagsTable, playersList, sc);
         }
-
     }
 
+    // calcula a média de avaliações de todos os jogadores e conta quantas avaliações foram feitas sobre cada jogador
     public void processaGlobalRatings(List<Rating> list, TabelaHashPlayer table) {
 
         Pesquisa search = new Pesquisa();
-
-        // int sofifaID;
-        // Double ratingAtual;
-
+        // encontra o jogador avaliado na hash table de jogadores e faz a soma da avaliação e do contador referente às Ratings
         for (Rating rating : list) {
-            // sofifaID = rating.getSofifaID();
-            // ratingAtual = rating.getRating();
-
-            // for (Player player : arrayList) {
-            // if (sofifaID == player.getSofifaID()) {
-            // player.setGlobalRating(player.getGlobalRating() + ratingAtual);
-            // player.setCounter(player.getCounter() + 1);
-            // }
-            // }
-
             Player player = search.findPlayer(rating.getSofifaID(), table);
             player.setGlobalRating(player.getGlobalRating() + rating.getRating());
             player.setCounter(player.getCounter() + 1);
-
         }
-
     }
 
     // Dado um sofifaID como chave, retorna o "Player" referente àquele sofifaID
@@ -80,15 +67,13 @@ public class Pesquisa {
 
         Player value = null;
         int tam = table.getTam();
-
-        int hashCode = (key % tam);
-        LinkedList<Player> linkedList = table.getValue().get(hashCode);
-        for (Player player : linkedList) {
+        int hashCode = (key % tam); // calcula o hash code referente ao jogador para achá-lo na hash table
+        LinkedList<Player> linkedList = table.getValue().get(hashCode); // encontra a LinkedList que contém o jogador
+        for (Player player : linkedList) { // encontra o jogador e o guarda na variável a ser retornada
             if (player.getSofifaID() == key) {
                 value = player;
             }
         }
-
         return value;
     }
 
@@ -96,42 +81,35 @@ public class Pesquisa {
     public ArrayList<Rating> findRating(int key, TabelaHashRating table) {
 
         ArrayList<Rating> value = new ArrayList<Rating>();
-
         int tam = table.getTam();
-
-        int hashCode = (key % tam);
-        LinkedList<Rating> linkedList = table.getValue().get(hashCode);
-        for (Rating rating : linkedList) {
+        int hashCode = (key % tam); // calcula o hash code referente ao usuário que fez a avaliação para achá-lo na hash table
+        LinkedList<Rating> linkedList = table.getValue().get(hashCode); // encontra a LinkedList que contém o usuário
+        for (Rating rating : linkedList) { // encontra as Ratings feitas pelo usuário e as guarda na lista a ser retornada
             if (rating.getUserID() == key) {
                 value.add(rating);
             }
         }
-
         return value;
     }
 
     // Dada uma lista de Tags em forma de Strings como entrada, retorna uma lista com os sofifaID referentes aos jogadores que possuem essas Tags
     public List<Integer> findTag(ArrayList<String> key, TabelaHashTag table) {
 
-        System.out.println(key);
-
         int tam = table.getTam();
         List<Integer> value = new ArrayList<Integer>();
         int hashCode = 0;
-
-        int nroKeys = 5 * key.size();
-
+        int nroKeys = 5 * key.size(); // o número de chaves é multiplicado por 5 pois cada Tag aparece 5 vezes para cada jogador no arquivo .csv
         for (String parte : key) {
-
+            // calcula o hashCode referente à essa tag
             hashCode = 0;
             char[] tagCA = parte.toCharArray();
             for (int i = 0; i < tagCA.length; i++) {
                 hashCode += (int) tagCA[i];
             }
             hashCode = (hashCode % tam);
-
+            // encontra a LinkedList referente ao hashCode calculado acima
             LinkedList<Tag> linkedList = table.getValue().get(hashCode);
-
+            // adiciona numa lista todos os IDs referentes aos jogadores que têm determinada tag
             for (Tag tag : linkedList) {
                 if (tag.getTag().equals(parte)) {
                     value.add(tag.getSofifaID());
@@ -139,137 +117,115 @@ public class Pesquisa {
             }
         }
         List<Integer> result = new ArrayList<Integer>();
-        result = value.stream()
+
+        result = value.stream() // retira os IDs dos jogadores que não têm TODAS as tags pesquisadas e retirada os IDs duplicados do jogadores que têm as tags
                 .filter(e -> Collections.frequency(value, e) >= nroKeys)
                 .distinct()
                 .collect(Collectors.toList());
-        // System.out.println("lista não filtrada tamanho: " + value.size());
-        // System.out.println("lista filtrada tamanho: " + result.size());
-        // System.out.println("Número de keys: " + nroKeys / 5);
-
-        // System.out.println(key);
-
-        return result;
+        return result; // retorna a lista com os IDs dos jogadores que têm TODAS as tags pesquisadas
     }
 
+    // Dada uma String que contém todas as tags a serem pesquisadas, imprime as informações dos jogadores que têm TODAS as tags
     public void pesquisaTag(String key, TabelaHashTag tagTable, TabelaHashPlayer playerTable) {
 
         List<Integer> list = new ArrayList<Integer>();
         Pesquisa search = new Pesquisa();
         ArrayList<String> parts = new ArrayList<String>();
-
         Scanner sc = new Scanner(key);
+        // separa as tags da String e retira as 'aspas' de cada tag
         for (String s; (s = sc.findWithinHorizon("(?<=\\').*?(?=\\')", 0)) != null;) {
-            // System.out.println(s);
             parts.add(s);
         }
-
+        parts.remove(" "); // remove os espaços vazios da lista que foram adicionado no processo acima
         parts.remove(" ");
         parts.remove(" ");
         parts.remove(" ");
-
-        list = search.findTag(parts, tagTable);
-
+        parts.remove(" ");
+        list = search.findTag(parts, tagTable); // encontra ss IDs de todos os jogadores que têm as tags pesquisadas
+        // imprime todas as informações sobre os jogadores da lista
         for (Integer id : list) {
             Player player = search.findPlayer(id, playerTable);
-            System.out.printf("sofifa_id = %6d, name = %45s, positions = %12s, rating = %1.6f, counter = %6d \n",
+            System.out.printf("sofifa_id = %6d; name = %45s; positions = %12s; rating = %1.6f; counter = %6d \n",
                     player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
                     player.getCounter());
         }
-
-        // list = search.findTag(s, tagTable);
-        // Player playerAtual = search.findPlayer(list.get(0).getSofifaID(),
-        // playerTable);
-        // for (Tag tag : list) {
-        // if (search.findPlayer(tag.getSofifaID(), playerTable) != playerAtual) {
-        // list.add(tag);
-        // }
-        // playerAtual = search.findPlayer(tag.getSofifaID(), playerTable);
-        // }
-
         sc.close();
-
     }
 
+    // Dado um userID como entrada, imprime as informações sobre todas as avaliações feitas pelo usuário
     public void pesquisaUser(int key, TabelaHashRating ratingTable, TabelaHashPlayer playersTable) {
 
         ArrayList<Rating> list = new ArrayList<Rating>();
         Pesquisa search = new Pesquisa();
-        list = search.findRating(key, ratingTable);
+        list = search.findRating(key, ratingTable); // encontra todas as avaliações feitas pelo usuário pesquisado
         int i = 0;
         for (Rating rating : list) {
-            Player player = search.findPlayer(rating.getSofifaID(), playersTable);
-            System.out.printf("sofifa_id = %6d, name = %45s, rating = %1.6f, counter = %6d, rating = %1.1f \n",
-                    player.getSofifaID(), player.getName(), player.getGlobalRating(), player.getCounter(), rating.getRating());
+            Player player = search.findPlayer(rating.getSofifaID(), playersTable); // encontra o jogador avaliado para imprimir suas informações
+            System.out.printf("sofifa_id = %6d; name = %45s; rating = %1.6f; counter = %6d; rating = %1.1f \n",
+                    player.getSofifaID(), player.getName(), player.getGlobalRating(), player.getCounter(),
+                    rating.getRating());
             i++;
-            if (i == 20)
+            if (i == 20) // limita a impressão para no máximo 20 avaliações
                 break;
         }
         System.out.println();
     }
 
+    // Dado um nome ou parte de um nome, imprime as informações sobre todos os jogadores que contém a chave pesquisada em seus nomes
     public void pesquisaNome(String prefix, List<Player> playersList) {
 
         List<Player> list = new ArrayList<Player>();
         System.out.println();
-
         for (Player player : playersList) {
             if (player.getName().contains(prefix)) {
-                list.add(player);
+                list.add(player); // adiciona à lista todos os jogadores que contém a chave pesquisada em seus nomes
             }
         }
-        for (Player player : list) {
-            System.out.printf("sofifa_id = %6d, name = %45s, positions = %12s, rating = %1.6f, counter = %6d \n",
+        for (Player player : list) { // imprime as informações dos jogadores da lista
+            System.out.printf("sofifa_id = %6d; name = %45s; positions = %12s; rating = %1.6f; counter = %6d \n",
                     player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
                     player.getCounter());
         }
     }
 
+    // Dado um número de jogadores e uma posição, retorna os N jogadores mais bem avaliados que jogam em determinada posição
     public void pesquisaTopPos(int n, String pos, List<Player> playersList) {
 
         ArrayList<Player> list = new ArrayList<Player>();
         System.out.println();
         Scanner sc = new Scanner(pos);
-        for (String s; (s = sc.findWithinHorizon("(?<=\\').*?(?=\\')", 0)) != null;) {
+        for (String s; (s = sc.findWithinHorizon("(?<=\\').*?(?=\\')", 0)) != null;) { // retira as 'aspas' da String para ser pesquisada
             pos = s;
         }
         sc.close();
-
-        for (Player player : playersList) {
+        for (Player player : playersList) { // adiciona a uma lista todos jogadores da posição que têm pelo menos 1000 avaliações de usuários
             if (player.getPositions().contains(pos)) {
                 if (player.getCounter() >= 1000) {
                     list.add(player);
                 }
             }
         }
-        // aplicar algum sort na lista pela global rating
         int bigger;
         Player temp;
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) { // ordena os jogadores pela média de avaliações usando Selection
             bigger = i;
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(j).getGlobalRating() > list.get(bigger).getGlobalRating()) // find the index of the minimum
-                                                                                        // element
-                {
+            for (int j = i + 1; j < list.size(); j++) { // encontra o jogador com maior média de avaliações no resto da lista
+                if (list.get(j).getGlobalRating() > list.get(bigger).getGlobalRating()) {
                     bigger = j;
                 }
             }
-
-            temp = list.get(bigger); // swap the current element with the minimum element
+            temp = list.get(bigger); // troca de posição o jogador atual com o de maior média da avaliações do resto da lista
             list.set(bigger, list.get(i));
             list.set(i, temp);
         }
-        //
         int i = 0;
-        for (Player player : list) {
-            // System.out.printf(player + "\n", player.getGlobalRating());
-            System.out.printf("sofifa_id = %6d, name = %45s, positions = %12s, rating = %1.6f, counter = %6d \n",
+        for (Player player : list) { // imrpime as informações dos jogadores encontrados na pesquisa
+            System.out.printf("sofifa_id = %6d; name = %45s; positions = %12s; rating = %1.6f; counter = %6d \n",
                     player.getSofifaID(), player.getName(), player.getPositions(), player.getGlobalRating(),
                     player.getCounter());
             i++;
-            if (i == n)
+            if (i == n) // limita o número de jogadores a serem impressos ao número dado pelo usuário na pesquisa
                 break;
         }
     }
-
 }

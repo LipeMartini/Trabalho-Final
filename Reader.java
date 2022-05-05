@@ -12,10 +12,10 @@ import org.supercsv.prefs.CsvPreference;
 
 public class Reader {
 
+    // lê o arquivo que contém as informações sobre as Tags e cria um ArrayList contendo todas as Tags
     public List<Tag> readTags(String csvFileName) throws IOException {
 
         ArrayList<Tag> arrayList = new ArrayList<Tag>();
-
         ICsvBeanReader beanReader = null;
         try {
             beanReader = new CsvBeanReader(new FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE);
@@ -31,29 +31,25 @@ public class Reader {
                     "sofifaID",
                     "tag",
             };
-
             Tag tag;
             while ((tag = beanReader.read(Tag.class, columns, processors)) != null) {
                 arrayList.add(tag);
             }
-
         } finally {
             if (beanReader != null) {
                 beanReader.close();
             }
         }
-
         return arrayList;
     }
 
+    // lê o arquivo que contém as informações sobre os Players e cria um ArrayList contendo todas os Players
     public List<Player> readPlayers(String csvFileName) throws IOException {
 
         ArrayList<Player> arrayList = new ArrayList<Player>();
-
         ICsvBeanReader beanReader = null;
         try {
             beanReader = new CsvBeanReader(new FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE);
-
             final String[] header = beanReader.getHeader(true);
             final CellProcessor[] processors = new CellProcessor[] {
                     new ParseInt(),
@@ -65,32 +61,27 @@ public class Reader {
                     "name",
                     "positions",
             };
-
             Player player;
             while ((player = beanReader.read(Player.class, columns, processors)) != null) {
                 player.setGlobalRating(0.0);
                 player.setCounter(0);
                 arrayList.add(player);
-                // System.out.println(player);
             }
-
         } finally {
             if (beanReader != null) {
                 beanReader.close();
             }
         }
-
         return arrayList;
     }
 
+    // lê o arquivo que contém as informações sobre os Ratings e cria um ArrayList contendo todas as Ratings
     public List<Rating> readRatings(String csvFileName) throws IOException {
 
         ArrayList<Rating> arrayList = new ArrayList<Rating>();
-
         ICsvBeanReader beanReader = null;
         try {
             beanReader = new CsvBeanReader(new FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE);
-
             final String[] header = beanReader.getHeader(true);
             final CellProcessor[] processors = new CellProcessor[] {
                     new ParseInt(),
@@ -102,19 +93,16 @@ public class Reader {
                     "sofifaID",
                     "rating",
             };
-
             Rating rating;
             while ((rating = beanReader.read(Rating.class, columns, processors)) != null) {
                 arrayList.add(rating);
                 // System.out.println(rating);
             }
-
         } finally {
             if (beanReader != null) {
                 beanReader.close();
             }
         }
-
         return arrayList;
     }
 

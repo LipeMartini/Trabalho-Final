@@ -4,7 +4,7 @@ import java.util.LinkedList;
 public class TabelaHashTag {
 
     ArrayList<LinkedList<Tag>> value;
-    int tam = 24000;
+    int tam = 3600;
 
     public int getTam() {
         return tam;
@@ -22,6 +22,7 @@ public class TabelaHashTag {
         this.value = value;
     }
 
+    // inicia uma hash table de tags vazia
     public TabelaHashTag iniciaTagTable(TabelaHashTag table) {
 
         table.value = new ArrayList<LinkedList<Tag>>();
@@ -29,10 +30,10 @@ public class TabelaHashTag {
             LinkedList<Tag> list = new LinkedList<Tag>();
             table.value.add(list);
         }
-
         return table;
     }
 
+    // recebe uma "Tag", adiciona na hash table e retorna a table com o elemento incluído
     public TabelaHashTag addValue(Tag value, TabelaHashTag table) {
 
         if (value.getTag() != null) {
@@ -47,5 +48,4 @@ public class TabelaHashTag {
         }
         return table;
     }
-
 }

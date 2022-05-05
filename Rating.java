@@ -1,8 +1,8 @@
 public class Rating {
 
-    private int userID;
-    private int sofifaID;
-    private double rating;
+    private int userID; // ID do usuário que fez a avaliação
+    private int sofifaID; // ID do jogador que foi avaliado
+    private double rating; // nota dada pelo usuário ao jogador, de 1 a 5
     
     public int getUserID() {
         return userID;
