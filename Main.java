@@ -12,7 +12,7 @@ public class Main {
         long time = System.currentTimeMillis();
         List<Tag> tagsList = reader.readTags("tags.csv"); // lê o arquivo com as Tags e retorna uma lista com todas
         List<Player> playersList = reader.readPlayers("players.csv"); // lê o arquivo com os Players e retorna uma lista com todos
-        List<Rating> ratingsList = reader.readRatings("rating.csv"); // lê o arquivo com as Ratings e retorna uma lista com todas
+        List<Rating> ratingsList = reader.readRatings("minirating.csv"); // lê o arquivo com as Ratings e retorna uma lista com todas
         // construção das tabelas hash
         TabelaHashTag tagsTable = new TabelaHashTag();
         tagsTable = tagsTable.iniciaTagTable(tagsTable);
